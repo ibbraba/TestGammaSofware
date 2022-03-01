@@ -46,13 +46,15 @@ class EntityField
                 ->setMembers($array[$i][6])
                 ->setCategory($array[$i][7])
                 ->setPresentation($array[$i][8]);
-           var_dump($group);
+
 
            $entityManger->persist($group);
 
         }
 
         $entityManger->flush();
+
+
     }
 
 

@@ -4,7 +4,19 @@
 
 {% block body %}
 
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
 
-    {{ form(form) }}
+
+    <div class="container-fluid">
+        <div class="form my-5">
+              <h1> Importer votre fichier</h1>
+            {{ form(form) }}
+        </div>
+    </div>
+
 
 {% endblock %}

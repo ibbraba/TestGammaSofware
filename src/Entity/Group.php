@@ -27,14 +27,10 @@ class Group
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\Unique
      */
     private $name;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $origin;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -45,6 +41,11 @@ class Group
      * @ORM\Column(type="integer", nullable=true)
      */
     private $debut_year;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $origin;
 
     /**
      * @ORM\Column(type="integer", nullable=true)

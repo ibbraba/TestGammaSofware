@@ -26,7 +26,7 @@ class AppController extends AbstractController
 
 
     /**
-     * @Route("/app", name="app_app")
+     * @Route("/app", name="app")
      * @param Request $request
      * @return Response
      */
@@ -46,6 +46,9 @@ class AppController extends AbstractController
                $array = $this->fileReader->read($file);
 
                 $groups = $this->entityField->createEntityField($array);
+
+                $this->addFlash("success", "Vos données ont bien été enregistées !");
+                $this->redirectToRoute("app", [], Response::HTTP_SEE_OTHER);
 
         }
 
