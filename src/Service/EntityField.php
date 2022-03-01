@@ -5,15 +5,29 @@ namespace App\Service;
 
 
 use App\Entity\Group;
+use Doctrine\Persistence\ManagerRegistry;
 
 class EntityField
 {
+
+    protected $doctrine;
+
+    public function __construct(ManagerRegistry $doctrine)
+    {
+        $this->doctrine = $doctrine;
+    }
+
+
     /**
      *
      * @param  $array
      * @param bool $firstLine
      */
     public function createEntityField($array, $firstLine = false){
+
+        $groups = [];
+
+        $entityManger = $this->doctrine->getManager();
 
         $firstLine ? $start = 0 : $start = 1 ;
 
@@ -32,8 +46,13 @@ class EntityField
                 ->setMembers($array[$i][6])
                 ->setCategory($array[$i][7])
                 ->setPresentation($array[$i][8]);
-//           var_dump($group);
+           var_dump($group);
+
+           $entityManger->persist($group);
+
         }
+
+        $entityManger->flush();
     }
 
 
