@@ -28,15 +28,14 @@ class EntityField
      */
     public function createEntityField($array, $firstLine = false){
 
-        $groups = [];
-
         $entityManger = $this->doctrine->getManager();
 
+        /**
+         * Decide if firstline should be counted as a row to flush in DB
+         */
         $firstLine ? $start = 0 : $start = 1 ;
 
         $arrayLength = sizeof($array);;
-
-
 
         for ($i = $start; $i<$arrayLength; $i++) {
             $group = new Group();
@@ -50,15 +49,10 @@ class EntityField
                 ->setCategory($array[$i][7])
                 ->setPresentation($array[$i][8]);
 
-
-           $entityManger->persist($group);
-
+            $entityManger->persist($group);
         }
 
         $entityManger->flush();
-
-
-
     }
 
 

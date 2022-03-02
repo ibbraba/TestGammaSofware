@@ -34,14 +34,21 @@ class AppController extends AbstractController
      */
     public function index(Request $request): Response
     {
-        $form = $this->createForm(UploadFileType::class, [ 'action' => $this->generateUrl('upload'),
-            'method' => 'GET',]);
+
+        /** STEP 1: Generate a form to upload a file   */
+        $form = $this->createForm(UploadFileType::class);
         $form->handleRequest($request);
 
         if ( $form->isSubmitted() && $form->isValid() ){
-              $file = $form['file']->getData();
-                //if Error else
 
+        /** STEP 2: GET file from form and convert sheet data to PHP Array  */
+            $file = $form['file']->getData();
+
+
+            /**
+             * Read file with PHPSpreadSheet bundle
+             * Catching error if file is incorrect
+             */
             try {
                 $array = $this->fileReader->read($file);
             }catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $exception) {
@@ -50,12 +57,15 @@ class AppController extends AbstractController
             }
 
 
-
+            /**
+             * STEP 3-4: Create a new instance of Group entity for each row and persist in Database
+             * Catching error if data is already flush in Database
+             * Redirect to App Page with Flash message to USER
+             */
             try
             {   $this->entityField->createEntityField($array);
                 $this->addFlash("success", "Vos données ont bien été enregistées !");
             }
-
             catch ( UniqueConstraintViolationException $exception){
                 $this->addFlash("warning", "Vos données sont déja enreistrées !");
             } finally {
@@ -71,34 +81,4 @@ class AppController extends AbstractController
         ]);
     }
 
-
-    /**
-     * @Route("/upload", name="upload")
-     */
-    public function upload(Request $request): Response
-    {
-
-        $file = $request->getContent();
-        dd($file);
-
-
-/*        $file = $request->getFiles(); // get the file from the sent request
-        $file[1]->getClientOriginalName();
-
-
-        $fileFolder = __DIR__ . '/../../public/uploads/';  //choose the folder in which the uploaded file will be stored
-        $filePathName = md5(uniqid()) . $file->getClientOriginalName();
-        // apply md5 function to generate an unique identifier for the file and concat it with the file extension
-        try {
-            $file->move($fileFolder, $filePathName);
-        } catch (FileException $e) {
-            dd($e);
-        }*/
-
-
-        return $this->render('app/index.html.twig', [
-            'controller_name' => 'AppController',
-        ]);
-
-    }
 }

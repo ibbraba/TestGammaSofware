@@ -7,6 +7,13 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class FileReaderService
     {
+
+    /**
+     * @param $file
+     * @return array
+     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     * Read the file and convert sheets row in Array
+     */
         public function read ($file){
             $inputFileName = $file;
 
@@ -28,8 +35,4 @@ class FileReaderService
 
 
         }
-
-
-
-
     }
