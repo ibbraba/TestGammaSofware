@@ -5,16 +5,19 @@ namespace App\Service;
 
 
 use App\Entity\Group;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\Persistence\ManagerRegistry;
 
 class EntityField
 {
 
     protected $doctrine;
+    protected $uniqueViolation;
 
     public function __construct(ManagerRegistry $doctrine)
     {
         $this->doctrine = $doctrine;
+        $this->uniqueViolation = false;
     }
 
 
@@ -32,7 +35,7 @@ class EntityField
         $firstLine ? $start = 0 : $start = 1 ;
 
         $arrayLength = sizeof($array);;
-        var_dump($arrayLength);
+
 
 
         for ($i = $start; $i<$arrayLength; $i++) {
@@ -53,6 +56,7 @@ class EntityField
         }
 
         $entityManger->flush();
+
 
 
     }

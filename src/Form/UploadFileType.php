@@ -13,10 +13,11 @@ class UploadFileType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('file', FileType::class)
-            ->add('submit', SubmitType::class, [
+            ->add('file', FileType::class, [])
+            ->add('envoyer', SubmitType::class, [
                 "attr" => [
-                    "class" => "btn btn-primary"
+                    "class" => "btn btn-primary my-4",
+
                 ]
             ])
         ;

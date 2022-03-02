@@ -4,12 +4,14 @@ namespace App\Controller;
 
 use App\Form\UploadFileType;
 use App\Service\EntityField;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Service\FileReaderService;
+use ZipStream\Exception;
 
 
 class AppController extends AbstractController
@@ -32,23 +34,33 @@ class AppController extends AbstractController
      */
     public function index(Request $request): Response
     {
-        /*$data = $this->fileReader->read();
-        dd($data);*/
-        $ok = 'ok';
-
-
         $form = $this->createForm(UploadFileType::class, [ 'action' => $this->generateUrl('upload'),
             'method' => 'GET',]);
         $form->handleRequest($request);
+
         if ( $form->isSubmitted() && $form->isValid() ){
               $file = $form['file']->getData();
+                //if Error else
 
-               $array = $this->fileReader->read($file);
+            try {
+                $array = $this->fileReader->read($file);
+            }catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $exception) {
+                $this->addFlash("danger", "Le fichier n'a pu être lu (essayez un fichier au format .xlsx)");
+                return $this->redirectToRoute("app", [], Response::HTTP_SEE_OTHER);
+            }
 
-                $groups = $this->entityField->createEntityField($array);
 
+
+            try
+            {   $this->entityField->createEntityField($array);
                 $this->addFlash("success", "Vos données ont bien été enregistées !");
+            }
+
+            catch ( UniqueConstraintViolationException $exception){
+                $this->addFlash("warning", "Vos données sont déja enreistrées !");
+            } finally {
                 $this->redirectToRoute("app", [], Response::HTTP_SEE_OTHER);
+            }
 
         }
 

@@ -10,10 +10,24 @@
         </div>
     {% endfor %}
 
+    {% for message in app.flashes('warning') %}
+        <div class="alert alert-warning">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+
+    {% for message in app.flashes('danger') %}
+        <div class="alert alert-danger">
+            {{ message }}
+        </div>
+    {% endfor %}
+
 
     <div class="container-fluid">
         <div class="form my-5">
               <h1> Importer votre fichier</h1>
+            <p class="my-3" style="text-align: center"> Excel vers <b>MySQL</b></p>
             {{ form(form) }}
         </div>
     </div>
